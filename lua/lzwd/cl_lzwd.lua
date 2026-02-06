@@ -3,7 +3,7 @@ require( "deferred" )
 local insert = table.insert
 local format, find, match, StartWith, Explode = string.format, string.find, string.match, string.StartWith, string.Explode
 local AsyncRead = file.AsyncRead
-local language_Add = language.Add
+local ParseProperties = util.ParseProperties
 
 local Log = lzwd.Log
 
@@ -106,22 +106,12 @@ local function CompileGMAFile( filepath, identifier )
     return d
 end
 
-local PATTERN_PROPERTY = "(.-)=(.-)$"
-
 local function MountLocalization( filepath )
     local d = deferred.new()
 
     AsyncRead( filepath, "WORKSHOP", function( filename, _, status, data )
         if status == FSASYNC_OK then
-            local lines = Explode( "\n", data )
-            
-            for i = 1, #lines do
-                local key, value = match( lines[i], PATTERN_PROPERTY )
-
-                if key and value then
-                    language_Add( key, value )
-                end
-            end
+            ParseProperties( data, language.Add )
 
             d:resolve()
         else
