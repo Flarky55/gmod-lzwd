@@ -1,5 +1,5 @@
 if SERVER then
-    
+
     resource.AddWorkshopLazy = lzwd.AddClientAutoload
 
 else
@@ -57,11 +57,13 @@ else
     ReadEnabled()
 
 
-    local IsOptionalLoaded = lzwd.IsLoaded
-    resource.IsOptionalLoaded = IsOptionalLoaded
+    local function IsOptionalEnabled( workshopid )
+        return Enabled[workshopid]
+    end
+    resource.IsOptionalEnabled = IsOptionalEnabled
 
     local function EnableOptional( workshopid )
-        if IsOptionalLoaded( workshopid ) then return end
+        if IsOptionalEnabled( workshopid ) then return end
 
         local data = GetOptional( workshopid )
         if data == nil then return end
@@ -74,7 +76,7 @@ else
     resource.EnableOptional = EnableOptional
 
     local function DisableOptional( workshopid )
-        if not IsOptionalLoaded( workshopid ) then return end
+        if not IsOptionalEnabled( workshopid ) then return end
 
         Enabled[workshopid] = nil
         WriteEnabled()

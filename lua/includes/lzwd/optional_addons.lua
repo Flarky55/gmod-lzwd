@@ -18,9 +18,9 @@ hook.Add( "PopulateToolMenu", "OptionalAddons", function()
                 categories[dataCategory] = form
             end
 
-            
+
             local checkbox = form:CheckBox( "N/A" )
-            checkbox:SetChecked( resource.IsOptionalLoaded( wsid ) )
+            checkbox:SetChecked( resource.IsOptionalEnabled( wsid ) )
             checkbox.OnChange = function( s, bVal )
                 if bVal then
                     resource.EnableOptional( wsid )
@@ -28,7 +28,7 @@ hook.Add( "PopulateToolMenu", "OptionalAddons", function()
                     resource.DisableOptional( wsid )
                 end
             end
-            
+
             local label = form:ControlHelp( wsid )
             label:SetMouseInputEnabled( true )
             label:SetCursor( "hand" )
