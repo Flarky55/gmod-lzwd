@@ -57,14 +57,11 @@ else
     ReadEnabled()
 
 
-    local function IsOptionalEnabled( workshopid )
+    function resource.IsOptionalEnabled( workshopid )
         return Enabled[workshopid]
     end
-    resource.IsOptionalEnabled = IsOptionalEnabled
 
     local function EnableOptional( workshopid )
-        if IsOptionalEnabled( workshopid ) then return end
-
         local data = GetOptional( workshopid )
         if data == nil then return end
 
@@ -76,8 +73,6 @@ else
     resource.EnableOptional = EnableOptional
 
     local function DisableOptional( workshopid )
-        if not IsOptionalEnabled( workshopid ) then return end
-
         Enabled[workshopid] = nil
         WriteEnabled()
     end
