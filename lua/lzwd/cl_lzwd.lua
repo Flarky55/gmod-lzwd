@@ -76,9 +76,9 @@ end
 
 local function GetCachedGMAFilepath( workshopid, timestamp )
     local cache_timestamp = SavedAddons[workshopid]
-    
-    if cache_timestamp == nil 
-        or (timestamp ~= nil and cache_timestamp < timestamp) 
+
+    if cache_timestamp == nil
+        or (timestamp ~= nil and cache_timestamp < timestamp)
     then
         return nil
     end
@@ -153,7 +153,7 @@ local function MountFiles( files, compileLua )
 
     for i = 1, #files do
         local filepath = files[i]
-        
+
         if compileLua and StartWith( filepath, PATH_LUA ) then
             for j = 1, #PATTERNS_INORDER do
                 local pattern = PATTERNS_INORDER[j]
@@ -172,7 +172,7 @@ local function MountFiles( files, compileLua )
         elseif StartWith( filepath, PATH_LOCALIZATION ) then
             local locale = match( filepath, PATTERN_PATH_LOCALE )
             if not localization[locale] then continue end
-            
+
             insert( localization[locale], filepath )
         end
     end
@@ -184,7 +184,7 @@ local function MountFiles( files, compileLua )
         table.sort( lua, sort_entries )
 
         local d = deferred.new()
-        
+
         for i = 1, #lua do
             lua[i] = CompileGMAFile( lua[i].filepath )
         end
@@ -212,7 +212,7 @@ local function MountFiles( files, compileLua )
     if #localizationNative > 0 then
         insert( promises, deferred.map( localizationNative, MountLocalization ) )
     else
-        -- localization["en"] may be empty too, however it's not gonna break. 
+        -- localization["en"] may be empty too, however it's not gonna break.
         insert( promises, deferred.map( localization["en"], MountLocalization ) )
     end
 
@@ -232,13 +232,13 @@ end
 
 --[[
         Downloading
---]] 
+--]]
 
 local function DownloadUGC( workshopid, retries, onSuccess, onFailure )
     retries = retries or 6
 
     steamworks.DownloadUGC( workshopid, function( path, gma )
-        if path ~= nil then 
+        if path ~= nil then
             onSuccess( path, gma )
         else
             if retries > 0 then
@@ -270,13 +270,13 @@ local function LoadAddon_Internal( filepath, workshopid, timestamp, compileLua, 
 
                 Loaded[workshopid] = true
 
-                if onSuccess then onSuccess() end 
-            end, 
+                if onSuccess then onSuccess() end
+            end,
             function( err )
                 ErrorNoHaltWithStack( format( "Failed to load addon '%s': mount failed (%s)", workshopid, err or "unknown" ) )
 
                 if onFailure then onFailure() end
-            end 
+            end
         )
     else
         DownloadUGC( workshopid, nil,
@@ -316,7 +316,7 @@ local function LoadAddon( workshopid, compileLua, onSuccess, onFailure )
                     mount
                     cache
             --]]
-            
+
             local filepath = GetCachedGMAFilepath( workshopid, data.updated )
 
             LoadAddon_Internal( filepath, workshopid, data.updated, compileLua, onSuccess, onFailure )
